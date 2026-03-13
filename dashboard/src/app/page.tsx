@@ -14,12 +14,9 @@ export default async function OverviewPage() {
 
   const historyData = history.map((h) => ({ date: h.date, total: Number(h.total) }));
   const currentTotal = netPosition;
-  const weekAgoEntry = historyData.find((h) => {
-    const d = new Date(h.date);
-    const weekAgo = new Date();
-    weekAgo.setDate(weekAgo.getDate() - 7);
-    return d <= weekAgo;
-  });
+  const weekAgo = new Date();
+  weekAgo.setDate(weekAgo.getDate() - 7);
+  const weekAgoEntry = [...historyData].reverse().find((h) => new Date(h.date) <= weekAgo);
   const weekChange = currentTotal - (weekAgoEntry?.total ?? currentTotal);
 
   const lastMonth = incomeExpenses[incomeExpenses.length - 1];

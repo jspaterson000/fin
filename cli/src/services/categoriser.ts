@@ -67,9 +67,11 @@ export function parseResponse(response: string, validIds: number[]): Categorised
 }
 
 export function callClaude(prompt: string): string {
-  const result = execSync(
-    `echo ${JSON.stringify(prompt)} | claude --print`,
-    { encoding: "utf-8", timeout: 120_000, maxBuffer: 10 * 1024 * 1024 }
-  );
+  const result = execSync("claude --print", {
+    input: prompt,
+    encoding: "utf-8",
+    timeout: 120_000,
+    maxBuffer: 10 * 1024 * 1024,
+  });
   return result;
 }

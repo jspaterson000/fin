@@ -87,6 +87,13 @@ export const importCommand = new Command("import")
       process.exit(0);
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
+      await db.insert(syncLog).values({
+        source: "csv",
+        accountsSynced: 0,
+        transactionsAdded: 0,
+        status: "error",
+        errorMessage: message,
+      });
       spinner.stop(`Import failed: ${message}`);
       process.exit(1);
     }

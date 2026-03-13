@@ -73,9 +73,6 @@ program.action(async () => {
     return;
   }
 
-  // Dispatch will be wired up as commands are built
-  p.log.info(`Command "${action}" not yet implemented.`);
-  p.outro("Done");
 });
 
 program.parse();

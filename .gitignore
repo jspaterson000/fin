@@ -4,3 +4,6 @@ dist/
 .env.local
 .next/
 *.tsbuildinfo
+
+# Personal financial reports
+dashboard/public/report.html

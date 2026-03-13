@@ -1,6 +1,6 @@
 # Fin — Personal Finance CLI & Dashboard
 
-Personal finance tool for Jacob & Thalya. CLI-first with a companion Next.js dashboard.
+Personal finance tool. CLI-first with a companion Next.js dashboard.
 
 ## Architecture
 
@@ -9,29 +9,11 @@ pnpm workspace monorepo:
 - `cli/` — Commander.js CLI tool
 - `dashboard/` — Next.js read-only dashboard
 
-## Infrastructure
-
-| Host | Alias | LAN IP | Tailscale IP | User | Role |
-|------|-------|--------|--------------|------|------|
-| **Luna VM** | `ssh luna` | LAN_IP_REDACTED | TAILSCALE_IP_REDACTED | jacob | Fin dashboard + DB |
-| **Proxmox** | `ssh proxmox` | LAN_IP_REDACTED | TAILSCALE_IP_REDACTED | root | Hypervisor |
-
-SSH key auth configured via `~/.ssh/config`.
-
-### Remote Access (Tailscale)
-
-All VMs run Tailscale with SSH enabled:
-```bash
-ssh jacob@luna        # or ssh jacob@TAILSCALE_IP_REDACTED
-ssh root@proxmox      # or ssh root@TAILSCALE_IP_REDACTED
-```
-
 ## Tech Stack
 
 - **CLI:** Node.js, TypeScript, Commander.js, @clack/prompts
 - **Dashboard:** Next.js (App Router), shadcn/ui, Tailwind CSS 4, Recharts
-- **Database:** PostgreSQL `fin` (on Luna VM, same instance as server dashboard)
-- **ORM:** Drizzle
+- **Database:** PostgreSQL via Drizzle ORM
 - **Categorisation:** Claude CLI via child_process
 
 ## Commands
@@ -43,6 +25,7 @@ pnpm db:studio        # Drizzle Studio
 pnpm dev              # Dashboard dev server (port 3000)
 pnpm build            # Dashboard production build
 cd cli && pnpm dev    # Run CLI in dev mode
+cd cli && pnpm test   # Run tests
 ```
 
 ## CLI Usage
@@ -57,28 +40,24 @@ fin accounts          # List accounts with balances
 fin anomalies         # Flag unusual spending
 ```
 
-## Deployment
-
-```bash
-scp -r cli/ luna:/home/jacob/fin/cli/
-scp -r dashboard/ luna:/home/jacob/fin/dashboard/
-scp -r packages/ luna:/home/jacob/fin/packages/
-
-ssh luna "cd /home/jacob/fin/cli && pnpm install && pnpm link --global"
-ssh luna "cd /home/jacob/fin/dashboard && pnpm install && pnpm build && echo 'REDACTED_PASSWORD' | sudo -S systemctl restart fin-dashboard"
-```
-
-Dashboard: port 3001, systemd service `fin-dashboard.service`.
-
 ## Environment Variables
 
-CLI `.env`:
+CLI (`cli/.env`):
 ```
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/fin
+DATABASE_URL=postgresql://user:pass@localhost:5432/fin
 UP_API_TOKEN=<up-banking-personal-access-token>
+UP_API_TOKEN_THALYA=<optional-partner-token>
 ```
 
-Dashboard `.env.local`:
+Dashboard (`dashboard/.env.local`):
 ```
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/fin
+DATABASE_URL=postgresql://user:pass@localhost:5432/fin
 ```
+
+## Key Patterns
+
+- Shared DB schema in `packages/db/` — both CLI and dashboard import from `@fin/db`
+- Lazy database connection via Proxy in `packages/db/src/connection.ts` (allows dotenv to load before connection)
+- CLI entry point uses tsx for TypeScript execution without compilation (`cli/bin/fin.js`)
+- Dashboard is read-only — all writes happen through the CLI
+- Multi-token sync supports tracking multiple UP accounts (e.g. household members)

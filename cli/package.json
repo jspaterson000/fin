@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "type": "module",
   "bin": {
-    "fin": "./dist/index.js"
+    "fin": "./bin/fin.js"
   },
   "scripts": {
     "dev": "tsx src/index.ts",

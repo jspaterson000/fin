@@ -61,6 +61,11 @@ describe("UpApi", () => {
 
     const accounts = await api.getAccounts();
     expect(accounts).toHaveLength(2);
+    expect(mockFetch).toHaveBeenCalledTimes(2);
+    expect(mockFetch).toHaveBeenLastCalledWith(
+      "https://api.up.com.au/api/v1/accounts?page[after]=cursor1",
+      expect.any(Object)
+    );
   });
 
   it("fetches transactions with since filter", async () => {
@@ -94,6 +99,25 @@ describe("UpApi", () => {
       expect.stringContaining("filter[since]="),
       expect.any(Object)
     );
+    expect(mockFetch).toHaveBeenCalledWith(
+      expect.stringContaining("filter[status]=SETTLED"),
+      expect.any(Object)
+    );
+  });
+
+  it("fetches transactions without since filter", async () => {
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        data: [],
+        links: { next: null },
+      }),
+    });
+
+    await api.getTransactions("acc-1");
+    const calledUrl = mockFetch.mock.calls[0][0] as string;
+    expect(calledUrl).toContain("filter[status]=SETTLED");
+    expect(calledUrl).not.toContain("filter[since]");
   });
 
   it("throws on API error", async () => {

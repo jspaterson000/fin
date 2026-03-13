@@ -1,0 +1,11 @@
+{
+  "name": "fin",
+  "private": true,
+  "scripts": {
+    "db:push": "pnpm --filter @fin/db run push",
+    "db:studio": "pnpm --filter @fin/db run studio",
+    "dev": "pnpm --filter dashboard run dev",
+    "build": "pnpm --filter dashboard run build",
+    "cli": "pnpm --filter cli run dev"
+  }
+}

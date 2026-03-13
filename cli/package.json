@@ -1,0 +1,26 @@
+{
+  "name": "cli",
+  "version": "0.0.1",
+  "type": "module",
+  "bin": {
+    "fin": "./dist/index.js"
+  },
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.10",
+    "@fin/db": "workspace:*",
+    "commander": "^13",
+    "csv-parse": "^5",
+    "dotenv": "^16"
+  },
+  "devDependencies": {
+    "tsx": "^4",
+    "typescript": "^5.7",
+    "vitest": "^3"
+  }
+}

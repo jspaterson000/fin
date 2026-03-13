@@ -5,6 +5,7 @@ import * as p from "@clack/prompts";
 import { syncCommand } from "./commands/sync.js";
 import { accountsCommand } from "./commands/accounts.js";
 import { importCommand } from "./commands/import.js";
+import { categoriseCommand } from "./commands/categorise.js";
 
 const program = new Command()
   .name("fin")
@@ -14,6 +15,7 @@ const program = new Command()
 program.addCommand(syncCommand);
 program.addCommand(accountsCommand);
 program.addCommand(importCommand);
+program.addCommand(categoriseCommand);
 
 program.action(async () => {
   p.intro("fin");
@@ -49,6 +51,11 @@ program.action(async () => {
     const file = await p.text({ message: "Path to Macquarie CSV file:" });
     if (p.isCancel(file)) { p.cancel("Cancelled."); process.exit(0); }
     await importCommand.parseAsync([file as string], { from: "user" });
+    return;
+  }
+
+  if (action === "categorise") {
+    await categoriseCommand.parseAsync([], { from: "user" });
     return;
   }
 

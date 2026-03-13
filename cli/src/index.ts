@@ -2,13 +2,14 @@
 import "dotenv/config";
 import { Command } from "commander";
 import * as p from "@clack/prompts";
+import { syncCommand } from "./commands/sync.js";
 
 const program = new Command()
   .name("fin")
   .description("Personal finance CLI for Jacob & Thalya")
   .version("0.0.1");
 
-// Commands will be registered here as they're built
+program.addCommand(syncCommand);
 
 program.action(async () => {
   p.intro("fin");
@@ -28,6 +29,11 @@ program.action(async () => {
   if (p.isCancel(action)) {
     p.cancel("Cancelled.");
     process.exit(0);
+  }
+
+  if (action === "sync") {
+    await syncCommand.parseAsync([], { from: "user" });
+    return;
   }
 
   // Dispatch will be wired up as commands are built

@@ -14,9 +14,11 @@
   "dependencies": {
     "@clack/prompts": "^0.10",
     "@fin/db": "workspace:*",
+    "@types/node": "^25.5.0",
     "commander": "^13",
     "csv-parse": "^5",
-    "dotenv": "^16"
+    "dotenv": "^16",
+    "drizzle-orm": "^0.44.7"
   },
   "devDependencies": {
     "tsx": "^4",

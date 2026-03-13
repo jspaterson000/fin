@@ -1,0 +1,14 @@
+[Unit]
+Description=Fin Personal Finance Dashboard
+After=network.target postgresql.service
+
+[Service]
+Type=simple
+User=jacob
+WorkingDirectory=/home/jacob/fin/dashboard
+ExecStart=/usr/bin/env npx next start -H 0.0.0.0 -p 3001
+Restart=on-failure
+Environment=NODE_ENV=production
+
+[Install]
+WantedBy=multi-user.target

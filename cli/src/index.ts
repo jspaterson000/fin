@@ -6,6 +6,8 @@ import { syncCommand } from "./commands/sync.js";
 import { accountsCommand } from "./commands/accounts.js";
 import { importCommand } from "./commands/import.js";
 import { categoriseCommand } from "./commands/categorise.js";
+import { anomaliesCommand } from "./commands/anomalies.js";
+import { summaryCommand } from "./commands/summary.js";
 
 const program = new Command()
   .name("fin")
@@ -16,6 +18,8 @@ program.addCommand(syncCommand);
 program.addCommand(accountsCommand);
 program.addCommand(importCommand);
 program.addCommand(categoriseCommand);
+program.addCommand(anomaliesCommand);
+program.addCommand(summaryCommand);
 
 program.action(async () => {
   p.intro("fin");
@@ -56,6 +60,16 @@ program.action(async () => {
 
   if (action === "categorise") {
     await categoriseCommand.parseAsync([], { from: "user" });
+    return;
+  }
+
+  if (action === "anomalies") {
+    await anomaliesCommand.parseAsync([], { from: "user" });
+    return;
+  }
+
+  if (action === "summary") {
+    await summaryCommand.parseAsync([], { from: "user" });
     return;
   }
 

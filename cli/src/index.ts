@@ -3,6 +3,7 @@ import "dotenv/config";
 import { Command } from "commander";
 import * as p from "@clack/prompts";
 import { syncCommand } from "./commands/sync.js";
+import { accountsCommand } from "./commands/accounts.js";
 
 const program = new Command()
   .name("fin")
@@ -10,6 +11,7 @@ const program = new Command()
   .version("0.0.1");
 
 program.addCommand(syncCommand);
+program.addCommand(accountsCommand);
 
 program.action(async () => {
   p.intro("fin");
@@ -33,6 +35,11 @@ program.action(async () => {
 
   if (action === "sync") {
     await syncCommand.parseAsync([], { from: "user" });
+    return;
+  }
+
+  if (action === "accounts") {
+    await accountsCommand.parseAsync([], { from: "user" });
     return;
   }
 
